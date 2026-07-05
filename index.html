@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Promptownik — Feedback Lab Prompt Library</title>
+<meta name="description" content="470 ready-to-copy AI prompts across 13 topics, built for the Feedback Lab community.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-page="index">
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Feedback Lab — Prompt Library</div>
+    <h1>Promptownik
+      <svg class="underline" viewBox="0 0 300 14" preserveAspectRatio="none">
+        <path d="M2,8 C60,2 120,12 150,7 C200,2 260,10 298,6" stroke="#b23a2e" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </svg>
+    </h1>
+    <p class="sub">One topic, one tap, a ready prompt in your clipboard.</p>
+  </header>
+
+  <div class="search-wrap" data-role="search-wrap">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <label for="search-input" class="visually-hidden">Search all prompts</label>
+      <input type="text" id="search-input" data-role="search-input" placeholder="Search by keyword, e.g. diet, pricing, headache…" autocomplete="off">
+      <button type="button" class="search-clear" data-role="search-clear" aria-label="Clear search">&times;</button>
+    </div>
+    <div class="search-results" data-role="search-results"></div>
+  </div>
+
+  <div class="grid" data-role="topic-grid"></div>
+
+  <footer>Feedback Lab</footer>
+
+</div>
+
+<script src="assets/prompts.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
