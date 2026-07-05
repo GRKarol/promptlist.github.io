@@ -1,4 +1,4 @@
-/* Promptownik prompt data. Generated file — do not hand-edit; see project-brief.md. */
+/* Promptbook prompt data. Generated file — do not hand-edit; see project-brief.md. */
 window.PROMPT_DATA = {
   "topics": [
     {

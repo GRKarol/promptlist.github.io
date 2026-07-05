@@ -1,4 +1,4 @@
-/* Promptownik — accordion, clipboard copy, global search.
+/* Promptbook — accordion, clipboard copy, global search.
    Reads content from window.PROMPT_DATA (assets/prompts.js). No build step. */
 (function () {
   'use strict';
@@ -86,7 +86,7 @@
 
     document.querySelectorAll('[data-role="topic-title"]').forEach(function (el) { el.textContent = topic.title; });
     document.querySelectorAll('[data-role="topic-desc"]').forEach(function (el) { el.textContent = topic.description; });
-    if (topic.title) document.title = topic.title + ' — Promptownik';
+    if (topic.title) document.title = topic.title + ' — Promptbook';
 
     list.innerHTML = topic.subtopics.map(function (st, sti) {
       var stSlug = slugify(st.name);
@@ -95,11 +95,11 @@
         return (
           '<div class="prompt-card" id="prompt-' + promptId + '">' +
           '<button type="button" class="prompt-header" aria-expanded="false">' +
-          '<span class="title">Prompt ' + (pi + 1) + '</span>' +
+          '<span class="title">' + escapeHtml(p.title) + '</span>' +
           '<span class="toggle"></span>' +
           '</button>' +
           '<div class="prompt-body">' +
-          '<p>' + escapeHtml(p) + '</p>' +
+          '<p>' + escapeHtml(p.text) + '</p>' +
           '<button type="button" class="copy-btn">📋 Copy prompt</button>' +
           '</div>' +
           '</div>'
@@ -290,7 +290,8 @@
             subtopicName: st.name,
             subtopicSlug: stSlug,
             promptId: stSlug + '-' + (pi + 1),
-            text: p
+            promptTitle: p.title,
+            text: p.text
           });
         });
       });
@@ -306,9 +307,11 @@
     var results = [];
     SEARCH_INDEX.forEach(function (item) {
       var nameMatch = item.subtopicName.toLowerCase().indexOf(q) !== -1;
+      var titleMatch = item.promptTitle.toLowerCase().indexOf(q) !== -1;
       var textMatch = item.text.toLowerCase().indexOf(q) !== -1;
-      if (!nameMatch && !textMatch) return;
-      var dedupeKey = nameMatch
+      if (!nameMatch && !titleMatch && !textMatch) return;
+      var specificPrompt = (titleMatch || textMatch) && !nameMatch;
+      var dedupeKey = nameMatch && !specificPrompt
         ? item.topicSlug + '|' + item.subtopicSlug + '|name'
         : item.topicSlug + '|' + item.subtopicSlug + '|' + item.promptId;
       if (seen[dedupeKey]) return;
@@ -318,7 +321,8 @@
         topicTitle: item.topicTitle,
         subtopicSlug: item.subtopicSlug,
         subtopicName: item.subtopicName,
-        promptId: textMatch && !nameMatch ? item.promptId : null,
+        promptId: specificPrompt ? item.promptId : null,
+        promptTitle: specificPrompt ? item.promptTitle : '',
         snippet: textMatch ? item.text : '',
         matchedText: textMatch
       });
@@ -373,8 +377,8 @@
       var snippetText = r.matchedText ? snippet(r.snippet, query) : '';
       return (
         '<a class="search-result" href="' + resultHref(r, onIndex) + '">' +
-        '<span class="r-topic">' + escapeHtml(r.topicTitle) + '</span>' +
-        '<span class="r-name">' + highlight(r.subtopicName, query) + '</span>' +
+        '<span class="r-topic">' + escapeHtml(r.topicTitle) + ' / ' + escapeHtml(r.subtopicName) + '</span>' +
+        '<span class="r-name">' + (r.promptTitle ? highlight(r.promptTitle, query) : highlight(r.subtopicName, query)) + '</span>' +
         (snippetText ? '<span class="r-snippet">' + highlight(snippetText, query) + '</span>' : '') +
         '</a>'
       );
